@@ -134,7 +134,7 @@
 
 <p>There are many contributors that use <code>git rebase -i</code> and <code>git commit -p</code> in their sleep though, so that won’t be the situation.</p>
 
-<p>The other reason I’ve been told is that &#8220;we generally squash all commits so that it&#8217;s easy to backport/revert”. I can&#8217;t agree with that. First, it is much more difficult to backport/revert just part of the PR if it is squashed. Morever, it’s pretty easy to backport/revert the whole PR by using <code>git revert</code> and <code>git cherry-pick</code> either with a range of commits or the merge commit. Less than 2% of commits get reverted anyways.</p>
+<p>The other reason I’ve <a href="https://github.com/rails/rails/pull/8267#issuecomment-11558238">been told</a> is that &#8220;we generally squash all commits so that it&#8217;s easy to backport/revert”. I can&#8217;t agree with that. First, it is much more difficult to backport/revert just part of the PR if it is squashed. Morever, it’s pretty easy to backport/revert the whole PR by using <code>git revert</code> and <code>git cherry-pick</code> either with a range of commits or the merge commit. Less than 2% of commits get reverted anyways.</p>
 
 <h2>When should committers not ask to squash commits?</h2>
 
