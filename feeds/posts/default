@@ -4,7 +4,7 @@
   <title><![CDATA[# Hash]]></title>
   <link href="http://blog.marc-andre.ca/atom.xml" rel="self"/>
   <link href="http://blog.marc-andre.ca/"/>
-  <updated>2014-02-05T16:19:17-05:00</updated>
+  <updated>2014-02-05T16:58:37-05:00</updated>
   <id>http://blog.marc-andre.ca/</id>
   <author>
     <name><![CDATA[Marc-André Lafortune]]></name>
@@ -47,10 +47,10 @@
 <p>I imagine the historical reason it that many contributors aren&#8217;t super comfortable with <code>git</code> and <code>git rebase -i</code> in particular, so their commits represent their train of thought, not a sequence of independent changes to apply. E.g.:</p>
 
 <ul>
-<li>Introduce <great feature></li>
+<li>Introduce &lt;great feature&gt;</li>
 <li>Oops, fix typo</li>
-<li>Oh oh, fix a bug of <great feature></li>
-<li>Fix bug of <great feature> (for real this time)</li>
+<li>Oh oh, fix a bug of &lt;great feature&gt;</li>
+<li>Fix bug of &lt;great feature&gt; (for real this time)</li>
 </ul>
 
 
