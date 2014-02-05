@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fixing MRI, a dozen steps at a time - # Hash</title>
+  <meta name="author" content="Marc-André Lafortune">
+
+  
+  <meta name="description" content="Is there a term like bugfield? You know, when everytime you get to take a couple of steps in a code base you encounter a different bug, which leads &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.marc-andre.ca/2010/04/01/fixing-mri-dozen-steps-at-time/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="# Hash" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">$.noConflict();</script>
+<script src="/javascripts/custom.js"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38685279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"><img alt="# hash" height="166px; " id="Header1_headerimg" src="http://2.bp.blogspot.com/_IXKt6zPbC7g/SdujkTMXpzI/AAAAAAAAABU/2AsMA3fytvQ/S1600-R/header.jpg" style="display: block" width="985px; "></a></h1>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.marc-andre.ca" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Fixing MRI, a Dozen Steps at a Time</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-01T00:00:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Is there a term like bugfield? You know, when everytime you get to take a couple of steps in a code base you encounter a different bug, which leads to another one, &#8230;, like a minefield of bugs?</p>
+
+<p>Here was my last sequence in Ruby (MRI)&#8230;</p>
+
+<p>Main goal: improve <code>Matrix#determinant</code> and <code>#rank</code> after a <a href="http://redmine.ruby-lang.org/issues/show/2772">suggestion of Yu Ichino</a>. The bulk of the work took me quite a while, as I had to check a bunch of things, understand the algorithm, do some performance testing, etc&#8230;</p>
+
+<!-- more -->
+
+
+<p>When modifying <code>Matrix#rank</code> to use this different approach, I take the opportunity to improve the styling. A variable name of <code>ii</code> is not as clear as <code>row</code>, and&#8230; it actually reveals that something is amiss because that loop goes up to the number of columns, not rows&#8230;</p>
+
+<p>1) So I find a minimal test case to convince myself I&#8217;m not mistaken. Yup, a simple 3x2 matrix has the wrong rank. I add that to the spec and fix <code>Matrix#rank</code>. When cleaning up, I make sure that <code>Matrix#regular?</code> and <code>Matrix#singular?</code> are using the right determinant function and not a bad variant that&#8217;s now deprecated.</p>
+
+<p>Turns out they are checking the rank of the matrix, which is not as efficient but more importantly&#8230;</p>
+
+<p>2) they both return false if the matrix is not square. This doesn&#8217;t make much mathematical sense.</p>
+
+<p>Since I&#8217;m now the happy maintainer of the lib and I am confident there is no other reasonable solution, I have them raise an error for rectangular matrices. This means specs are either wrong or incomplete in Rubyspec, though, so I check them out&#8230;</p>
+
+<p>3) Turns out Rubyspec is incomplete for those, so <a href="http://github.com/rubyspec/rubyspec/commit/94108c8f8d29e9e46da4d000e4c6a8fa1f912361">I specify</a> what error should be returned in case of a rectangular matrix. Double check my change by running it gives me 0 assertions. Oups?</p>
+
+<p>Turns out that the guard I wrote to signify this was a bug never passes. Ah, right, <code>ruby_bug "", "1.9"</code> means &#8220;this is a bug present in the whole 1.9 .x line&#8221;, so it will not be executed until Ruby 2.0!</p>
+
+<p>My bad, but the program to run the specs shouldn&#8217;t allow that though, so&#8230;</p>
+
+<p>4) Discussion with Brian Ford, the maintainer of RubySpec. Good thing he&#8217;s always on IRC. Anyways, he might put in a max version to avoid such nonsense in the future. Meanwhile&#8230;</p>
+
+<p>5) A quick search in RubySpec reveals about a half dozen of such bad guards, so I set about <a href="http://github.com/rubyspec/rubyspec/commit/370ebb2d217b35d177d3070909ad8b694b1eed28">fixing each one</a>, and&#8230;</p>
+
+<p>6) One of the spec that was not guarded properly fails for the latest Ruby trunk. It&#8217;s not clear it&#8217;s a bug though. At least for me, as I&#8217;ve never tried to open the singleton class of a Bignum!</p>
+
+<p>So I investigate, try a couple of things, and yeah, the more I dig, the more it looks like a bug, so <a href="http://redmine.ruby-lang.org/issues/show/3222">I open an issue</a> to confirm with ruby-core. There&#8217;s one spec left&#8230;</p>
+
+<p>7) The last spec shows clearly a small bug in <code>String#sub!</code> so <a href="http://github.com/ruby/ruby/commit/479fa407780ca01ce04dce1ef21342da4e148215">I fix that in MRI</a>&#8230; and I realize that the error message for the wrong number of parameters is misleading.</p>
+
+<p>8) It takes about a microsecond to fix that error message. A quick find reveals other similar error messages in the MRI code. A quick review leads to&#8230; 18 issues of all sorts. Some more inaccuracies, some uninformative messages, some that don&#8217;t follow the standard format and typos in the doc.</p>
+
+<p>9) I <a href="http://github.com/ruby/ruby/commit/478c3e080b0d2782ae630f87c22d1a8e36756778">fix all of these too</a>. Ideally this should be refactored, but I&#8217;m getting tired. Yet I&#8217;m still awake enough to realize that one more method has the wrong doc&#8230;</p>
+
+<p>10) From the code, I gather that the interface for <code>SignalException.new</code> is a bit more complex than advertised. I supplement the doc <a href="http://github.com/ruby/ruby/commit/4d3f87718014cf13189c35c4ed8a6cfd93a91406">as best as I can</a>.</p>
+
+<p>Ouf, I&#8217;m done. Double check the commit&#8230; arghh, there&#8217;s another method that accepts an undocumented extra parameter, so&#8230;</p>
+
+<p>11) That extra param is a bit odd. Looks like you can build a regexp with a third parameter equal to &#8220;n&#8221; or &#8220;N&#8221; and the encoding switches to binary. Other values will get you a warning, and any letter after the &#8220;n&#8221; will be ignored. Smells like legacy.</p>
+
+<p><code>git blame</code> tracks back the changes years ago, giving me a reference to the ruby-dev list. Lucky me, it&#8217;s not in Japanese and refers to <code>uri/common.rb</code>. A quick check refers to no Regexp.new with that third argument. Ah, there&#8217;s a <code>Regexp.new(HEADER_PATTERN, 'N')</code> in uri/mailto. The &#8216;N&#8217; doesn&#8217;t mean binary, though, since it&#8217;s in second place (so it means &#8220;case insensitive&#8221;, as would <code>true</code>), which&#8230;.</p>
+
+<p>12) is a bug; the regexp is already case insensitive so that &#8216;N&#8217; has no effect. I don&#8217;t understand enough what an extra &#8220;N&#8221; really does to be sure if it can be removed (since it doesn&#8217;t have any effect right now, ) or should put in third position.</p>
+
+<p>I&#8217;m a bit dizzy. I should really go to sleep. Even though this is all pretty minor, I fire a <a href="http://redmine.ruby-lang.org/issues/show/3224">redmine issue</a> about the doc and <a href="http://redmine.ruby-lang.org/issues/show/3225">another one</a> about the lib and go to bed&#8230;</p>
+
+<p>And I thought fixing <code>Matrix#regular?</code> would be trivial&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-01T00:00:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2010</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2010/04/01/fixing-mri-dozen-steps-at-time/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2010/04/01/fixing-mri-dozen-steps-at-time/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/09/01/best-time-to-get-involved-in-ruby-core/" title="Previous Post: Best Time To Get Involved In Ruby Core">&laquo; Best Time To Get Involved In Ruby Core</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/11/15/methodmissing-politely/" title="Next Post: method_missing, politely">method_missing, politely &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>I ♥ Ruby!</h1>
+<div class="bio">
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+<ul class="projects">
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
+<li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
+<li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
+
+<div style="margin-top: 5px">
+<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://blog.marc-andre.ca"></a>
+<noscript><a href="http://flattr.com/thing/1177153/Hash" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+</div>
+
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by example</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/25/dry-migrations/">DRY migrations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("malafortune", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/malafortune" class="twitter-follow-button" data-show-count="false">Follow @malafortune</a>
+  
+</section>
+
+
+<section>
+  <h1>on the Internets</h1>
+  <ul>
+    <li><script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%22%3e%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%3c%2f%61%3e%27%29%3b'))</script></li>
+    <li><a href="https://github.com/marcandre">Github</a></li>
+    <li><a href="http://stackoverflow.com/users/8279/marc-andre-lafortune">StackOverflow</a></li>
+    <li>#freenode: marcandre</li>
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113114279421763230783?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Marc-André Lafortune -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'marc-andre';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

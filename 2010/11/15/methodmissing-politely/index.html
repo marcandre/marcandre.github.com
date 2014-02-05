@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title># Hash</title>
+  <title>method_missing, politely - # Hash</title>
   <meta name="author" content="Marc-André Lafortune">
 
   
-  <meta name="description" content="Tech.pro sponsored a tutorial on method lookup in Ruby 2.0.0. It&#8217;s an in-depth review of how exactly Ruby deals with method calls. Read on → ">
+  <meta name="description" content="In their Polite Programmer talk at Rubyconf, Jim Weirich and Chris Nelson pointed out that merely adding some behavior with method_missing wasn&#8217 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.marc-andre.ca/">
+  <link rel="canonical" href="http://blog.marc-andre.ca/2010/11/15/methodmissing-politely/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,141 +74,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/2013/03/23/method-lookup-in-ruby-20/">Method Lookup in Ruby 2.0.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-23T00:27:00-04:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Tech.pro sponsored a tutorial on method lookup in Ruby 2.0.0.</p>
-
-<p>It&#8217;s an in-depth review of how exactly Ruby deals with method calls.</p>
-
-<p><footer>
-  <a rel="full-article" href="http://tech.pro/tutorial/1149/understanding-method-lookup-in-ruby-20">Read on →</a>
-</footer></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by Example</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-23T07:40:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There&#8217;s a <a href="http://rrmartins.github.com/blog/2013/02/26/traducao-ruby-2-dot-0-por-exemplos/">Portugese translation</a>  by Rodrigo Martins if you prefer.</p>
-
-<p>A quick summary of some of the new features of Ruby 2.0.0</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2013/02/23/ruby-2-by-example/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/04/25/dry-migrations/">DRY Migrations</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-25T00:00:00-04:00" pubdate data-updated="true">Apr 25<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I wanted to write a post about the many things that should be fixed with Rails.</p>
-
-<p>Interestingly, Rails 3.1 fixes quite many of these.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2011/04/25/dry-migrations/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/11/15/methodmissing-politely/">Method_missing, Politely</a></h1>
+      <h1 class="entry-title">Method_missing, Politely</h1>
     
     
       <p class="meta">
@@ -231,7 +102,7 @@
   </header>
 
 
-  <div class="entry-content"><p>In their <a href="politeprogrammer.com/blog.html">Polite Programmer</a> talk at Rubyconf, Jim Weirich and Chris Nelson pointed out that merely adding some behavior with <code>method_missing</code> wasn&#8217;t quite polite, as shown below:</p>
+<div class="entry-content"><p>In their <a href="politeprogrammer.com/blog.html">Polite Programmer</a> talk at Rubyconf, Jim Weirich and Chris Nelson pointed out that merely adding some behavior with <code>method_missing</code> wasn&#8217;t quite polite, as shown below:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -266,262 +137,97 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>In order for <code>respond_to?</code> to return <code>true</code>, one can specialize it</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2010/11/15/methodmissing-politely/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a Dozen Steps at a Time</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-01T00:00:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Is there a term like bugfield? You know, when everytime you get to take a couple of steps in a code base you encounter a different bug, which leads to another one, &#8230;, like a minefield of bugs?</p>
-
-<p>Here was my last sequence in Ruby (MRI)&#8230;</p>
-
-<p>Main goal: improve <code>Matrix#determinant</code> and <code>#rank</code> after a <a href="http://redmine.ruby-lang.org/issues/show/2772">suggestion of Yu Ichino</a>. The bulk of the work took me quite a while, as I had to check a bunch of things, understand the algorithm, do some performance testing, etc&#8230;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/09/01/best-time-to-get-involved-in-ruby-core/">Best Time to Get Involved in Ruby Core</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-01T00:00:00-04:00" pubdate data-updated="true">Sep 1<span>st</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Apart from enjoying the summer, I&#8217;ve spent time hacking on MRI, especially since I&#8217;ve been accepted as a committer. The feature freeze for Ruby 1.9.2 was planned for yesterday and this has been pushed back a couple of days before. Rejoice!</p>
-
-<p>Why? </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2009/09/01/best-time-to-get-involved-in-ruby-core/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/06/01/stickler-in-silicon-valley/">Stickler in Silicon Valley</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-06-01T00:00:00-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have not been actively looking for a job yet. Nevertheless, I was contacted by a startup and invited to spend a week in Silicon Valley / San Francisco, hacking around with them to see if I could become part of their team, which I found quite flattering. I learned lots of new things in California. A couple of new words too. I&#8217;m still unsure as to what exactly a hipster is, but &#8220;stickler&#8221; was easier to grasp: one who insists on exactness or completeness in the observance of something.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2009/06/01/stickler-in-silicon-valley/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/05/02/schizo-ruby-puzzle/">A Schizo Ruby Puzzle</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-05-02T00:00:00-04:00" pubdate data-updated="true">May 2<span>nd</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Quick quirky quiz (schizo version)</p>
+<p>In order for <code>respond_to?</code> to return <code>true</code>, one can specialize it<!-- more -->, as follows:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Without writing any method/block/lambda,</span>
-</span><span class='line'><span class="c1"># can you find ways to obtain, in Ruby 1.8.7 or 1.9:</span>
-</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="n">y</span>   <span class="c1"># ==&gt; true</span>
-</span><span class='line'><span class="n">y</span> <span class="o">==</span> <span class="n">x</span>   <span class="c1"># ==&gt; false</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">StereoPlayer</span>
+</span><span class='line'>  <span class="c1"># def method_missing ...</span>
+</span><span class='line'>  <span class="c1">#   ...</span>
+</span><span class='line'>  <span class="c1"># end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">method</span><span class="o">.</span><span class="n">to_s</span> <span class="o">=~</span> <span class="sr">/play_(\w+)/</span> <span class="o">||</span> <span class="k">super</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">respond_to?</span> <span class="ss">:play_some_Beethoven</span> <span class="c1"># =&gt; true</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Here&#8217;s how I got to checkout Ruby&#8217;s source and stumble upon that.</p>
+<p>This is better, but it still doesn&#8217;t make <code>play_some_Beethoven</code> behave exactly like a method. Indeed:</p>
 
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2009/05/02/schizo-ruby-puzzle/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/05/01/lost-in-recursion/">Lost in Recursion</a></h1>
-    
-    
-      <p class="meta">
-        
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">method</span> <span class="ss">:play_some_Beethoven</span>
+</span><span class='line'><span class="c1"># =&gt; NameError: undefined method `play_some_Beethoven&#39;</span>
+</span><span class='line'><span class="c1">#               for class `StereoPlayer&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-05-01T00:00:00-04:00" pubdate data-updated="true">May 1<span>st</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Last time I asked a simple (but quite hard) Ruby quiz:</p>
+<p>Ruby 1.9.2 introduces <code>respond_to_missing?</code> that provides for a clean solution to the problem. Instead of specializing <code>respond_to?</code> one specializes <code>respond_to_missing?</code>. Here&#8217;s a full example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Without writing any method/block/lambda,</span>
-</span><span class='line'><span class="c1"># can you find ways to obtain, in Ruby 1.8.7 or 1.9:</span>
-</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="n">y</span>   <span class="c1"># ==&gt; true</span>
-</span><span class='line'><span class="n">y</span> <span class="o">==</span> <span class="n">x</span>   <span class="c1"># ==&gt; false</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">StereoPlayer</span>
+</span><span class='line'>  <span class="c1"># def method_missing ...</span>
+</span><span class='line'>  <span class="c1">#   ...</span>
+</span><span class='line'>  <span class="c1"># end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">respond_to_missing?</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">method</span> <span class="o">=~</span> <span class="sr">/play_(\w+)/</span> <span class="o">||</span> <span class="k">super</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">p</span> <span class="o">=</span> <span class="no">StereoPlayer</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">play_some_Beethoven</span> <span class="c1"># =&gt; &quot;Here&#39;s some_Beethoven&quot;</span>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">respond_to?</span> <span class="ss">:play_some_Beethoven</span> <span class="c1"># =&gt; true</span>
+</span><span class='line'><span class="n">m</span> <span class="o">=</span> <span class="nb">p</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="ss">:play_some_Beethoven</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Method: StereoPlayer#play_some_Beethoven&gt;</span>
+</span><span class='line'><span class="c1"># m acts like any other method:</span>
+</span><span class='line'><span class="n">m</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;Here&#39;s some_Beethoven&quot;</span>
+</span><span class='line'><span class="n">m</span> <span class="o">==</span> <span class="nb">p</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="ss">:play_some_Beethoven</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+</span><span class='line'><span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; :play_some_Beethoven</span>
+</span><span class='line'><span class="no">StereoPlayer</span><span class="o">.</span><span class="n">send</span> <span class="ss">:define_method</span><span class="p">,</span> <span class="ss">:ludwig</span><span class="p">,</span> <span class="n">m</span>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">ludwig</span> <span class="c1"># =&gt; &quot;Here&#39;s some_Beethoven&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-
-
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2009/05/01/lost-in-recursion/">Read on &rarr;</a>
-    </footer>
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/04/03/zombies-hashes-archaisms-of-ruby-core/">Zombies Hashes Archaisms of Ruby Core</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
 
 
 
@@ -533,42 +239,42 @@
   
 
 
-<time datetime="2009-04-03T00:00:00-04:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2009</time>
-        
-      </p>
+<time datetime="2010-11-15T00:00:00-05:00" pubdate data-updated="true">Nov 15<span>th</span>, 2010</time>
+      
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>I just <b>love</b> hashes. So much so, I named my blog after them. I also like that the hash sign is used for comments, in Ruby, or the way <i>hash</i> resembles <i>hatch</i>, thus the messy graphic theme and all. But I really like hashes. They are like mini-objects (object hatchlings?) and I tend to use them to store all sorts of information or instead of many conditions with <code>case x; when :a ...; when :b ...</code>.</p>
-
-<p>So I was quite surprised to note that in Ruby, either it&#8217;s really easy and natural to create a hash (with the super nice <code>{:key =&gt; value, ...}</code> syntax) or</div>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2010/11/15/methodmissing-politely/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2010/11/15/methodmissing-politely/" >Tweet</a>
   
   
-    <footer>
-      <a rel="full-article" href="/2009/04/03/zombies-hashes-archaisms-of-ruby-core/">Read on &rarr;</a>
-    </footer>
   
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/04/01/fixing-mri-dozen-steps-at-time/" title="Previous Post: Fixing MRI, a dozen steps at a time">&laquo; Fixing MRI, a dozen steps at a time</a>
+      
+      
+        <a class="basic-alignment right" href="/2011/04/25/dry-migrations/" title="Next Post: DRY migrations">DRY migrations &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
 <h1>I ♥ Ruby!</h1>
 <div class="bio">
-I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
 <ul class="projects">
-<li><a href="https://github.com/marcandre/backports">backports</a>: today&#8217;s Ruby in yesterday&#8217;s implementations.</li>
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
 <li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
 <li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
 
@@ -609,7 +315,7 @@ I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, incl
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -647,6 +353,7 @@ I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, incl
 
   
 </aside>
+
 
     </div>
   </div>

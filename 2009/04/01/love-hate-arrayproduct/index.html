@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Love & Hate: Array#product - # Hash</title>
+  <meta name="author" content="Marc-André Lafortune">
+
+  
+  <meta name="description" content="Quick quirky quizz: 1
+2
+3
+4
+# What is the output of
+p [40, 2].sum
+p [2,3,7].product
+# ? Are you expecting a reference to the late Douglas Adams? Sum &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.marc-andre.ca/2009/04/01/love-hate-arrayproduct/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="# Hash" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">$.noConflict();</script>
+<script src="/javascripts/custom.js"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38685279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"><img alt="# hash" height="166px; " id="Header1_headerimg" src="http://2.bp.blogspot.com/_IXKt6zPbC7g/SdujkTMXpzI/AAAAAAAAABU/2AsMA3fytvQ/S1600-R/header.jpg" style="display: block" width="985px; "></a></h1>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.marc-andre.ca" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Love & Hate: Array#product</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-01T00:00:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Quick quirky quizz:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># What is the output of</span>
+</span><span class='line'><span class="nb">p</span> <span class="o">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="o">].</span><span class="n">sum</span>
+</span><span class='line'><span class="nb">p</span> <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">product</span>
+</span><span class='line'><span class="c1"># ?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Are you expecting a reference to the late Douglas Adams?</p>
+
+<!-- more -->
+
+
+<p><b>Sum</b></p>
+
+<p>If you&#8217;re running Rails, <code>sum</code> will indeed return 42. In straight Ruby, though, <code>sum</code> won&#8217;t be defined.</p>
+
+<p>Yes, not even in ruby 1.8.7 or 1.9. Many core extensions of rails were &#8216;ported&#8217; to ruby.</p>
+
+<p><code>Symbol::to_proc</code> is probably the most notable one, but <code>Enumerable::group_by</code>,</p>
+
+<p><code>Float::round_with_precision</code>, <code>Integer::even?</code> and <code>Integer::odd?</code> come to mind also.</p>
+
+<p>Why was <code>sum</code> not included? Probably because the new <code>inject</code> makes it
+easier to sum enumerables (e.g <code>[40,2].inject(:+)</code>) and because Matz wants the methods of <code>Enumerable</code> to remain as generic as possible (and not assume that elements respond to <code>:+</code>, for instance). Still, I quite like the idea of <code>sum</code>.</p>
+
+<p><b>Product</b></p>
+
+<p>Now the irony is that <code>product</code> is not defined in rails, but it is in ruby 1.8.7+.</p>
+
+<p>You might be a bit surprised though! Indeed:</p>
+
+<p><code>[2,3,7].product  # ==&gt; [[2], [3], [7]] !</code></p>
+
+<p>Say what? Yeah, it turns out the <code>Array::product</code> produces the <a href="http://en.wikipedia.org/wiki/Cartesian_product">cartesian product</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">13</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">[</span><span class="ss">:spades</span><span class="p">,</span> <span class="ss">:hearts</span><span class="p">,</span> <span class="ss">:diamonds</span><span class="p">,</span> <span class="ss">:clubs</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># produces a full card deck:</span>
+</span><span class='line'><span class="c1"># =&gt; [[1, :spades], [1, :hearts], ..., [2, :spades],...]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Naming methods is quite a delicate task. My belief is that a more appropriate and descriptive name would have been <code>cartesian_product</code>, <code>cross_product</code> or <code>product_set</code>. <code>product</code> might be shorter I think it will run against the principle of least surprise for a lot of folks. The most frustrating part is that <code>product</code> used without any argument is pretty useless. If you really need that result, there are other ways to get it!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">product</span>
+</span><span class='line'><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">combination</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">each_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+</span><span class='line'><span class="c1"># =&gt; same result</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So that&#8217;s the hate part.</p>
+
+<p>Now the love part. I had some fun backporting more features of Ruby 1.8.7/1.9 to older Ruby in my <a href="http://github.com/marcandre/backports">backports gem</a>. At some point I had ported enough that I decided I might as well port <b>everything</b>. As of version 1.6, that&#8217;s done. This includes, of course, <code>Array#product</code>&#8230; which turned out to be the most interesting thing to backport! My first version used a recursive function, but I then thought about using enumerators. After 3 refactors, I got to a really nice version:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Array</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">trivial_enum</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span><span class="p">{</span><span class="o">|</span><span class="n">yielder</span><span class="o">|</span> <span class="n">yielder</span><span class="o">.</span><span class="n">yield</span> <span class="o">[]</span> <span class="p">}</span>
+</span><span class='line'>    <span class="o">[</span><span class="nb">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="n">trivial_enum</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">enum</span><span class="p">,</span> <span class="n">array</span><span class="o">|</span>
+</span><span class='line'>      <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">yielder</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">enum</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">partial_product</span><span class="o">|</span>
+</span><span class='line'>          <span class="n">array</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="o">|</span>
+</span><span class='line'>            <span class="n">yielder</span><span class="o">.</span><span class="n">yield</span> <span class="n">partial_product</span> <span class="o">+</span> <span class="o">[</span><span class="n">obj</span><span class="o">]</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">to_a</span>
+</span><span class='line'>  <span class="k">end</span> <span class="k">unless</span> <span class="nb">method_defined?</span> <span class="ss">:product</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I get an enumerator for all the combinations by building it up successively using <code>inject</code> and starting from a trivial enumerator. It would be easy to have <code>product</code> accept a block but the standard simply returns an array, so you&#8217;ll find a simple call to <code>to_a</code> at the end. I love enumerators and&#8230; I love this implementation of <code>product</code>!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-01T00:00:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2009</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2009/04/01/love-hate-arrayproduct/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2009/04/01/love-hate-arrayproduct/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/03/02/leave-my-options-alone/" title="Previous Post: Leave My Options Alone">&laquo; Leave My Options Alone</a>
+      
+      
+        <a class="basic-alignment right" href="/2009/04/02/whats-point-of-ruby-187/" title="Next Post: Whats Point Of Ruby 187">Whats Point Of Ruby 187 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>I ♥ Ruby!</h1>
+<div class="bio">
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+<ul class="projects">
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
+<li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
+<li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
+
+<div style="margin-top: 5px">
+<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://blog.marc-andre.ca"></a>
+<noscript><a href="http://flattr.com/thing/1177153/Hash" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+</div>
+
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by example</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/25/dry-migrations/">DRY migrations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("malafortune", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/malafortune" class="twitter-follow-button" data-show-count="false">Follow @malafortune</a>
+  
+</section>
+
+
+<section>
+  <h1>on the Internets</h1>
+  <ul>
+    <li><script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%22%3e%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%3c%2f%61%3e%27%29%3b'))</script></li>
+    <li><a href="https://github.com/marcandre">Github</a></li>
+    <li><a href="http://stackoverflow.com/users/8279/marc-andre-lafortune">StackOverflow</a></li>
+    <li>#freenode: marcandre</li>
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113114279421763230783?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Marc-André Lafortune -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'marc-andre';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Leave My Options Alone - # Hash</title>
+  <meta name="author" content="Marc-André Lafortune">
+
+  
+  <meta name="description" content="Let me start by asking you a small quiz: 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+# Will there be any difference between the output of: &lt;% &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.marc-andre.ca/2009/03/02/leave-my-options-alone/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="# Hash" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">$.noConflict();</script>
+<script src="/javascripts/custom.js"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38685279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"><img alt="# hash" height="166px; " id="Header1_headerimg" src="http://2.bp.blogspot.com/_IXKt6zPbC7g/SdujkTMXpzI/AAAAAAAAABU/2AsMA3fytvQ/S1600-R/header.jpg" style="display: block" width="985px; "></a></h1>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.marc-andre.ca" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Leave My Options Alone</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-02T00:00:00-05:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Let me start by asking you a small quiz:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Will there be any difference between the output of:</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="sx">% content_tag_for(:tr, </span><span class="no">Foo</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s2">&quot;css_class&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">...&lt;% end %&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sx">% content_tag_for(:tr, </span><span class="no">Bar</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s2">&quot;css_class&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">...&lt;% end %&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># and the output of:</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="sx">%- @style = {:class =&gt; &quot;css_class&quot;} -%&gt;</span>
+</span><span class='line'><span class="sx">&lt;% content_tag_for(:tr, Foo.new, @style) do %&gt;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">&lt;</span><span class="sx">% end %&gt;</span>
+</span><span class='line'><span class="sx">&lt;% content_tag_for(:tr, Bar.new, @style) do %&gt;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">&lt;</span><span class="sx">% end </span><span class="o">%&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># ?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>If you answered &#8220;Nope&#8221;, congratulations, you&#8217;re a normal, sane human being. I like you. Anyone answering &#8220;Yup&#8221; is either slightly crazy, guessed that I wasn&#8217;t asking a trivial question (or both?). Because indeed, the output is <i>different</i>. Why? Because the first <code>content_tag_for</code> modifies <code>@style[:class]</code> argument.</p>
+
+<p>You&#8217;re probably not expecting yet another apparently trivial question, but here goes: <i>is this a bug</i>?</p>
+
+<p>If you had to bet about my opinion, your 5 bucks would be safe on &#8220;yeah, it&#8217;s a bug&#8221;. But I can&#8217;t really say that it <i>is</i> a bug. I&#8217;ve never read anywhere that options won&#8217;t be modified. It&#8217;s (of course) not specified in the doc of <code>content_tag_for</code>. It&#8217;s generally not stated what happens when you pass an unrecognized option, so forget about things like that. I&#8217;m not aware of any official general rule of rails. I doubt there is one, because I can find many places where options are modified (e.g. <code>error_message_on, truncate, highlight, excerpt, word_wrap</code>, &#8230;). These other examples, though, won&#8217;t modify the options in a harmful way. Indeed, writing:</p>
+
+<p><code>@options.reverse_merge!(:foo =&gt; "default_bar")</code></p>
+
+<p>will not cause a problem like the one I just showed (unless anything else relies on options[:foo] being left unspecified).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># If this works:</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">truncate</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="p">{</span><span class="ss">:length</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">})</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Shouldn&#39;t this work too?</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">truncate</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="p">{</span><span class="ss">:length</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">}</span><span class="o">.</span><span class="n">freeze</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>They won&#8217;t enable you to pass a frozen hash, though. Do you freeze your constants? I like freezing things. I freeze my constants, I freeze my settings, I freeze everything I can. And it upsets me when I can&#8217;t pass a frozen options. <i>Is this a bug too</i>?</p>
+
+<p>Unless I&#8217;m mistaken, the current stance is that options passed can be changed, tortured and abused as much as the implementation desires and god damn it, check the source if you care.</p>
+
+<p>I believe rails should take a clear and reasonable stance on options. I can think of two:</p>
+
+<p>1) options can be modified, but only in a way that is independent on any other arguments or internal state.</p>
+
+<p>2) options will never be modified.</p>
+
+<p><code>truncate</code> would be considered buggy only if the second stance is taken, while <code>content_tag_for</code>, as in my example, would be buggy under either positions, since it depends on the class of the second argument.</p>
+
+<p>My personal vote goes for the second stance: leave my options alone!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-02T00:00:00-05:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2009</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2009/03/02/leave-my-options-alone/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2009/03/02/leave-my-options-alone/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/03/01/does-bill-gates-use-ie/" title="Previous Post: Does Bill Gates use IE?">&laquo; Does Bill Gates use IE?</a>
+      
+      
+        <a class="basic-alignment right" href="/2009/04/01/love-hate-arrayproduct/" title="Next Post: Love & Hate: Array#product">Love & Hate: Array#product &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>I ♥ Ruby!</h1>
+<div class="bio">
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+<ul class="projects">
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
+<li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
+<li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
+
+<div style="margin-top: 5px">
+<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://blog.marc-andre.ca"></a>
+<noscript><a href="http://flattr.com/thing/1177153/Hash" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+</div>
+
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by example</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/25/dry-migrations/">DRY migrations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("malafortune", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/malafortune" class="twitter-follow-button" data-show-count="false">Follow @malafortune</a>
+  
+</section>
+
+
+<section>
+  <h1>on the Internets</h1>
+  <ul>
+    <li><script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%22%3e%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%3c%2f%61%3e%27%29%3b'))</script></li>
+    <li><a href="https://github.com/marcandre">Github</a></li>
+    <li><a href="http://stackoverflow.com/users/8279/marc-andre-lafortune">StackOverflow</a></li>
+    <li>#freenode: marcandre</li>
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113114279421763230783?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Marc-André Lafortune -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'marc-andre';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

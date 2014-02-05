@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby 2.0.0 by example - # Hash</title>
+  <meta name="author" content="Marc-André Lafortune">
+
+  
+  <meta name="description" content="There&#8217;s a Portugese translation by Rodrigo Martins if you prefer. A quick summary of some of the new features of Ruby 2.0.0: Language Changes &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="# Hash" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">$.noConflict();</script>
+<script src="/javascripts/custom.js"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38685279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"><img alt="# hash" height="166px; " id="Header1_headerimg" src="http://2.bp.blogspot.com/_IXKt6zPbC7g/SdujkTMXpzI/AAAAAAAAABU/2AsMA3fytvQ/S1600-R/header.jpg" style="display: block" width="985px; "></a></h1>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.marc-andre.ca" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby 2.0.0 by Example</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-23T07:40:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>There&#8217;s a <a href="http://rrmartins.github.com/blog/2013/02/26/traducao-ruby-2-dot-0-por-exemplos/">Portugese translation</a>  by Rodrigo Martins if you prefer.</p>
+
+<p>A quick summary of some of the new features of Ruby 2.0.0<!-- more -->:</p>
+
+<h1>Language Changes</h1>
+
+<h2>Keyword arguments</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'>  <span class="c1"># (From action_view/helpers/text_helper.rb)</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">cycle</span><span class="p">(</span><span class="n">first_value</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">options</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">extract_options!</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># ...</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">cycle</span><span class="p">(</span><span class="n">first_value</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># ...</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># CAUTION: Not exactly identical, as keywords are enforced:</span>
+</span><span class='line'><span class="n">cycle</span><span class="p">(</span><span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="ss">nme</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; ArgumentError: unknown keyword: nme</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># To get exact same result:</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">cycle</span><span class="p">(</span><span class="n">first_value</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">ignore_extra</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># ...</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This makes method definitions very flexible. In summary:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">name</span><span class="p">({</span><span class="n">required_arguments</span><span class="p">,</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+</span><span class='line'>         <span class="p">{</span><span class="n">optional_arguments</span><span class="p">,</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+</span><span class='line'>         <span class="p">{</span><span class="o">*</span><span class="n">rest</span> <span class="o">||</span> <span class="n">additional_required_arguments</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span> <span class="c1"># Did you know?</span>
+</span><span class='line'>         <span class="p">{</span><span class="n">keyword_arguments</span><span class="p">:</span> <span class="s2">&quot;with_defaults&quot;</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+</span><span class='line'>         <span class="p">{</span><span class="o">**</span><span class="n">rest_of_keyword_arguments</span><span class="p">}</span>
+</span><span class='line'>         <span class="p">{</span><span class="o">&amp;</span><span class="n">block_capture</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In Ruby 2.0.0, keyword arguments must have defaults, or else must be captured by <code>**extra</code> at the end. Next version <a href="https://bugs.ruby-lang.org/issues/7701">will allow</a> mandatory keyword arguments, e.g. <code>def hello(optional: 'default', required:)</code>, but there are <a href="http://stackoverflow.com/questions/13250447/can-i-have-required-named-parameters-in-ruby-2-x/15078852#15078852">ways to do it now</a>.</p>
+
+<p>Defaults, for optional parameters or keyword arguments, can be mostly any expression, including method calls for the current object and can use previous parameters.</p>
+
+<p>A complex example showing most of this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">C</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">needed</span><span class="p">,</span> <span class="n">needed2</span><span class="p">,</span>
+</span><span class='line'>         <span class="n">maybe1</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span><span class="p">,</span> <span class="n">maybe2</span> <span class="o">=</span> <span class="n">maybe1</span><span class="o">.</span><span class="n">upcase</span><span class="p">,</span>
+</span><span class='line'>         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+</span><span class='line'>         <span class="ss">named1</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="ss">named2</span><span class="p">:</span> <span class="n">a_method</span><span class="p">(</span><span class="n">named1</span><span class="p">,</span> <span class="n">needed2</span><span class="p">),</span>
+</span><span class='line'>         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
+</span><span class='line'>         <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">a_method</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</span><span class='line'>    <span class="c1"># ...</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">C</span><span class="o">.</span><span class="n">instance_method</span><span class="p">(</span><span class="ss">:hi</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+</span><span class='line'><span class="c1"># =&gt; [ [:req, :needed], [:req, :needed2],</span>
+</span><span class='line'><span class="c1">#      [:opt, :maybe1], [:opt, :maybe2],</span>
+</span><span class='line'><span class="c1">#      [:rest, :args],</span>
+</span><span class='line'><span class="c1">#      [:key, :named1], [:key, :named2],</span>
+</span><span class='line'><span class="c1">#      [:keyrest, :options],</span>
+</span><span class='line'><span class="c1">#      [:block, :block] ]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://bugs.ruby-lang.org/issues/7922">Known bug</a>: it&#8217;s not currently possible to ignore extra options without naming the <code>**</code> argument.</p>
+
+<h2>Symbol list creation</h2>
+
+<p>Easy way to create lists of symbols with <code>%i</code> and <code>%I</code> (where <code>i</code> is for <a href="http://ruby-doc.org/core-2.0/String.html#method-i-intern"><code>intern</code></a>):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'><span class="no">KEYS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:foo</span><span class="p">,</span> <span class="ss">:bar</span><span class="p">,</span> <span class="ss">:baz</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="no">KEYS</span> <span class="o">=</span> <span class="o">%</span><span class="n">i</span><span class="o">[</span><span class="n">foo</span> <span class="n">bar</span> <span class="n">baz</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Default encoding is UTF-8</h2>
+
+<p>No magic comment is needed in case the encoding is utf-8.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'><span class="c1"># encoding: utf-8</span>
+</span><span class='line'><span class="c1"># ^^^ previous line was needed!</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;❤ Marc-André ❤&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;❤ Marc-André ❤&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Unused variables can start with _</h2>
+
+<p>Did you know that Ruby can warn you about unused variables?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Any Ruby, with warning on:</span>
+</span><span class='line'><span class="n">ruby</span> <span class="o">-</span><span class="n">w</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  def hi</span>
+</span><span class='line'><span class="s2">    hello, world = &#39;hello, world&#39;.split(&#39;, &#39;)</span>
+</span><span class='line'><span class="s2">    world</span>
+</span><span class='line'><span class="s2">  end&quot;</span>
+</span><span class='line'><span class="c1"># =&gt; warning: assigned but unused variable - hello</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The way to avoid the warning was to use <code>_</code>. Now we can use any variable name starting with an underscore:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9</span>
+</span><span class='line'><span class="n">ruby</span> <span class="o">-</span><span class="n">w</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  def foo</span>
+</span><span class='line'><span class="s2">    _, world = &#39;hello, world&#39;.split(&#39;, &#39;)</span>
+</span><span class='line'><span class="s2">    world</span>
+</span><span class='line'><span class="s2">  end&quot;</span>
+</span><span class='line'><span class="c1"># =&gt; no warning</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0</span>
+</span><span class='line'><span class="n">ruby</span> <span class="o">-</span><span class="n">w</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  def hi</span>
+</span><span class='line'><span class="s2">    _hello, world = &#39;hello, world&#39;.split(&#39;, &#39;)</span>
+</span><span class='line'><span class="s2">    world</span>
+</span><span class='line'><span class="s2">  end&quot;</span>
+</span><span class='line'><span class="c1"># =&gt; no warning either</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Core classes changes</h1>
+
+<h2>Prepend</h2>
+
+<p><a href="http://ruby-doc.org/core-2.0/String.html#method-i-prepend"><code>Module#prepend</code></a> inserts a module at the beginning of the call chain. It can nicely replace <code>alias_method_chain</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Range</span>
+</span><span class='line'>  <span class="c1"># From active_support/core_ext/range/include_range.rb</span>
+</span><span class='line'>  <span class="c1"># Extends the default Range#include? to support range comparisons.</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">include_with_range?</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="o">::</span><span class="no">Range</span><span class="p">)</span>
+</span><span class='line'>      <span class="c1"># 1...10 includes 1..9 but it does not include 1..10.</span>
+</span><span class='line'>      <span class="n">operator</span> <span class="o">=</span> <span class="n">exclude_end?</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">value</span><span class="o">.</span><span class="n">exclude_end?</span> <span class="p">?</span> <span class="p">:</span><span class="o">&lt;</span> <span class="p">:</span> <span class="p">:</span><span class="o">&lt;=</span>
+</span><span class='line'>      <span class="n">include_without_range?</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">value</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">include_without_range?</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">alias_method_chain</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:range</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Range</span><span class="o">.</span><span class="n">ancestors</span> <span class="c1"># =&gt; [Range, Enumerable, Object...]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0</span>
+</span><span class='line'><span class="k">module</span> <span class="nn">IncludeRangeExt</span>
+</span><span class='line'>  <span class="c1"># Extends the default Range#include? to support range comparisons.</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">include?</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="o">::</span><span class="no">Range</span><span class="p">)</span>
+</span><span class='line'>      <span class="c1"># 1...10 includes 1..9 but it does not include 1..10.</span>
+</span><span class='line'>      <span class="n">operator</span> <span class="o">=</span> <span class="n">exclude_end?</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">value</span><span class="o">.</span><span class="n">exclude_end?</span> <span class="p">?</span> <span class="p">:</span><span class="o">&lt;</span> <span class="p">:</span> <span class="p">:</span><span class="o">&lt;=</span>
+</span><span class='line'>      <span class="k">super</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">value</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">super</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Range</span>
+</span><span class='line'>  <span class="n">prepend</span> <span class="no">IncludeRangeExt</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Range</span><span class="o">.</span><span class="n">ancestors</span> <span class="c1"># =&gt; [IncludeRangeExt, Range, Enumerable, Object...]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Refinements [experimental]</h2>
+
+<p>In Ruby 1.9, if you <code>alias_method_chain</code> a method, the new definition takes place everywhere. In Ruby 2.0.0, you can make this kind of change just for yourself using <a href="http://ruby-doc.org/core-2.0/Module.html#method-i-refine"><code>Module#refine</code></a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0</span>
+</span><span class='line'><span class="k">module</span> <span class="nn">IncludeRangeExt</span>
+</span><span class='line'>  <span class="n">refine</span> <span class="no">Range</span> <span class="k">do</span>
+</span><span class='line'>    <span class="c1"># Extends the default Range#include? to support range comparisons.</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">include?</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="o">::</span><span class="no">Range</span><span class="p">)</span>
+</span><span class='line'>        <span class="c1"># 1...10 includes 1..9 but it does not include 1..10.</span>
+</span><span class='line'>        <span class="n">operator</span> <span class="o">=</span> <span class="n">exclude_end?</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">value</span><span class="o">.</span><span class="n">exclude_end?</span> <span class="p">?</span> <span class="p">:</span><span class="o">&lt;</span> <span class="p">:</span> <span class="p">:</span><span class="o">&lt;=</span>
+</span><span class='line'>        <span class="k">super</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">value</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="k">super</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">test_before</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">r</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; false (default behavior)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Now turn on the refinement:</span>
+</span><span class='line'><span class="n">using</span> <span class="no">IncludeRangeExt</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; true  (refined behavior)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">test_after</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">r</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">test_after</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># =&gt; true (defined after using, so refined behavior)</span>
+</span><span class='line'>
+</span><span class='line'><span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">all?</span> <span class="k">do</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span> <span class="c1"># =&gt; true  (refined behavior)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># But refined version happens only for calls defined after the using:</span>
+</span><span class='line'><span class="n">test_before</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># =&gt; false (defined before, not affected)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;some_other_file&#39;</span> <span class="c1"># =&gt; not affected, will use the default behavior</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Note:</span>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">send</span> <span class="ss">:include?</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span> <span class="c1"># =&gt; false (for now, send ignores refinements)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Full spec is <a href="http://bugs.ruby-lang.org/projects/ruby-trunk/wiki/RefinementsSpec">here</a> and is subject to change in later versions. More in-depth discussion <a href="http://benhoskin.gs/2013/02/24/ruby-2-0-by-example#refinements">here</a></p>
+
+<h2>Lazy enumerators</h2>
+
+<p>An <code>Enumerable</code> can be turned into a lazy one with the new <a href="http://ruby-doc.org/core-2.0/Enumerable.html#method-i-lazy"><code>Enumerable#lazy</code></a> method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="n">lines</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="s1">&#39;a_very_large_file&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">lazy</span> <span class="c1"># so we only read the necessary parts!</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="p">}</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:chomp</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">each_slice</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">lines</span><span class="o">|</span> <span class="n">lines</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">take_while</span> <span class="p">{</span><span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># =&gt; Lazy enumerator, nothing executed yet</span>
+</span><span class='line'><span class="n">lines</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; Reads the file until it returns 3 elements</span>
+</span><span class='line'>               <span class="c1"># or until an element of length &lt;= 20 is</span>
+</span><span class='line'>               <span class="c1"># returned (because of the take_while)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># To consume the enumerable:</span>
+</span><span class='line'><span class="n">lines</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># or...</span>
+</span><span class='line'><span class="n">lines</span><span class="o">.</span><span class="n">force</span> <span class="c1"># =&gt; Reads the file and returns an array</span>
+</span><span class='line'><span class="n">lines</span><span class="o">.</span><span class="n">each</span><span class="p">{</span><span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">elem</span> <span class="p">}</span> <span class="c1"># =&gt; Reads the file and prints the resulting elements</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that <code>lazy</code> will often be slower than a non lazy version. It should be used only when it really makes sense, not just to avoid building an intermediary array.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;fruity&#39;</span>
+</span><span class='line'><span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span>
+</span><span class='line'><span class="n">compare</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">lazy</span>   <span class="p">{</span> <span class="n">r</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_s</span><span class="p">)</span><span class="o">.</span><span class="n">each_cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">direct</span> <span class="p">{</span> <span class="n">r</span>     <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_s</span><span class="p">)</span><span class="o">.</span><span class="n">each_cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>      <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c1"># =&gt; direct is faster than lazy by 2x ± 0.1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Lazy size</h2>
+
+<p><a href="http://ruby-doc.org/core-2.0/Enumerator.html#method-i-size"><code>Enumerator#size</code></a> can be called to get the size of the enumerator without consuming it (if available).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="c1"># =&gt; 94109400</span>
+</span><span class='line'><span class="kp">loop</span><span class="o">.</span><span class="n">size</span> <span class="c1"># =&gt; Float::INFINITY</span>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">drop_while</span><span class="o">.</span><span class="n">size</span> <span class="c1"># =&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When creating enumerators, either with <code>to_enum</code>, <code>Enumerator::New</code>, or <code>Enumerator::Lazy::New</code> it is possible to define a size too:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="n">fib</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">Float</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'>  <span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">a</span>
+</span><span class='line'>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="n">a</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">still_lazy</span> <span class="o">=</span> <span class="n">fib</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span class='line'><span class="n">still_lazy</span><span class="o">.</span><span class="n">size</span> <span class="c1"># =&gt; 1_000_000 - 42</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Enumerable</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="n">every</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">unless</span> <span class="nb">block_given?</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">to_enum</span><span class="p">(</span><span class="ss">:skip</span><span class="p">,</span> <span class="n">every</span><span class="p">)</span> <span class="p">{</span> <span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">size</span><span class="o">+</span><span class="n">every</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">every</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">each_slice</span><span class="p">(</span><span class="n">every</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">ignore</span><span class="o">|</span>
+</span><span class='line'>      <span class="k">yield</span> <span class="n">first</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [1, 5, 9]</span>
+</span><span class='line'><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="c1"># =&gt; 3, without executing the loop</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Additional details and examples in the doc of <a href="http://ruby-doc.org/core-2.0/Object.html#method-i-to_enum"><code>to_enum</code></a></p>
+
+<h2>__dir__</h2>
+
+<p>Although <a href="http://ruby-doc.org/core-2.0/Kernel.html#method-i-require_relative"><code>require_relative</code></a> makes the use of <code>File.dirname(__FILE__)</code> much less frequent, we can now use <a href="http://ruby-doc.org/core-2.0/Kernel.html#method-i-__dir__"><code>__dir__</code></a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.8:</span>
+</span><span class='line'><span class="nb">require</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/lib&quot;</span>
+</span><span class='line'><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/.Gemfile&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'><span class="n">require_relative</span> <span class="s1">&#39;lib&#39;</span>
+</span><span class='line'><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/.config&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0</span>
+</span><span class='line'><span class="n">require_relative</span> <span class="s1">&#39;lib&#39;</span> <span class="c1"># no need to use __dir__ for this!</span>
+</span><span class='line'><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">__dir__</span> <span class="o">+</span> <span class="s1">&#39;/.config&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>bsearch</h2>
+
+<p>Binary search is now available, using either <a href="http://ruby-doc.org/core-2.0/Array.html#method-i-bsearch"><code>Array#bsearch</code></a> or <a href="http://ruby-doc.org/core-2.0/Range.html#method-i-bsearch"><code>Range#bsearch</code></a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="n">ary</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="o">]</span>
+</span><span class='line'><span class="n">ary</span><span class="o">.</span><span class="n">bsearch</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&gt;=</span>   <span class="mi">6</span> <span class="p">}</span> <span class="c1">#=&gt; 7</span>
+</span><span class='line'><span class="n">ary</span><span class="o">.</span><span class="n">bsearch</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="p">}</span> <span class="c1">#=&gt; nil</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Also on ranges, including ranges of floats:</span>
+</span><span class='line'><span class="p">(</span><span class="ss">Math</span><span class="p">:</span><span class="ss">:PI</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">.</span><span class="n">.</span> <span class="ss">Math</span><span class="p">:</span><span class="ss">:PI</span> <span class="o">*</span> <span class="mi">6</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">bsearch</span><span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">Math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">}</span>
+</span><span class='line'><span class="c1"># =&gt; Math::PI * (6+1/3.0)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>to_h</h2>
+
+<p>There is now an official way to convert a class to a Hash, using <code>to_h</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="no">Car</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:model</span><span class="p">,</span> <span class="ss">:year</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">build</span>
+</span><span class='line'>    <span class="c1">#...</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">car</span> <span class="o">=</span> <span class="no">Car</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Toyota&#39;</span><span class="p">,</span> <span class="s1">&#39;Prius&#39;</span><span class="p">,</span> <span class="mi">2014</span><span class="p">)</span>
+</span><span class='line'><span class="n">car</span><span class="o">.</span><span class="n">to_h</span> <span class="c1"># =&gt; {:make=&gt;&quot;Toyota&quot;, :model=&gt;&quot;Prius&quot;, :year=&gt;2014}</span>
+</span><span class='line'><span class="kp">nil</span><span class="o">.</span><span class="n">to_h</span> <span class="c1"># =&gt; {}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This has been implemented for <code>nil</code>, <code>Struct</code> and <code>OpenStruct</code>, but not for <code>Enumerable</code>/<code>Array</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="ss">hello</span><span class="p">:</span> <span class="s1">&#39;world&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">upcase</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>                <span class="o">.</span><span class="n">to_h</span> <span class="c1"># =&gt; NoMethodError:</span>
+</span><span class='line'><span class="c1"># undefined method `to_h&#39; for [[&quot;hello&quot;, &quot;WORLD&quot;]]:Array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you think this would be a useful feature, you should <a href="http://bugs.ruby-lang.org/issues/7292">try to convince Matz</a>.</p>
+
+<h2>caller_locations</h2>
+
+<p>It used to be tricky to know which method just called. It wasn&#8217;t very efficient either, since the whole backtrace had to be returned. Each frame was a string that needed to be first computed by Ruby and probably parsed afterwards.</p>
+
+<p>Enters <a href="http://ruby-doc.org/core-2.0/Kernel.html#method-i-caller_locations"><code>caller_locations</code></a> that returns the information in an object fashion and with a better api that can limit the number of frames requested.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9:</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">whoze_there_using_caller</span>
+</span><span class='line'>  <span class="nb">caller</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="sr">/`([^&#39;]*)&#39;/</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0:</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">whoze_there_using_locations</span>
+</span><span class='line'>  <span class="n">caller_locations</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">label</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>How much faster is it?
+A <a href="https://gist.github.com/marcandre/5041813">simple test</a> gives me 45x speedup for a short stacktrace, and 100x for a stacktrace of 100 entries!</p>
+
+<p>The extra information like the file path, line number are still accessible; instead of asking for <code>label</code>, ask for <code>path</code> or <code>lineno</code>.</p>
+
+<h2>Optimizations</h2>
+
+<p>It&#8217;s difficult to show most optimizations by code, but some nice optimizations made it in Ruby 2.0.0. In particular, the GC was optimized to make forking much faster.</p>
+
+<p>One optimization we can demonstrate was to make many floats immediates on 64-bit systems. This avoids creating new objects in many cases:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Ruby 1.9</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="n">object_id</span> <span class="o">==</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="n">object_id</span> <span class="c1"># =&gt; false</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Ruby 2.0</span>
+</span><span class='line'><span class="nb">warn</span> <span class="s2">&quot;Optimization only on 64 bit systems&quot;</span> <span class="k">unless</span> <span class="mi">42</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">==</span> <span class="mi">64</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="n">object_id</span> <span class="o">==</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="n">object_id</span> <span class="c1"># =&gt; true (4.2 is immediate)</span>
+</span><span class='line'><span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="n">e100</span><span class="o">.</span><span class="n">object_id</span> <span class="o">==</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2</span><span class="n">e100</span><span class="o">.</span><span class="n">object_id</span> <span class="c1"># =&gt; false (4.2e100 isn&#39;t)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>What else?</h2>
+
+<p>An extensive list of changes is the <a href="https://github.com/marcandre/ruby/blob/news/NEWS.rdoc">NEWS file</a>.</p>
+
+<h2>I want it!</h2>
+
+<p>Try it out today:</p>
+
+<ul>
+<li>install with rvm: <code>rvm get head &amp;&amp; rvm install 2.0.0</code> (note that <code>rvm get stable</code> is not sufficient!)</li>
+<li>install with rbenv: <code>rbenv install 2.0.0-p0</code> (maybe, see comment by Artur Hebda)</li>
+<li>other installation: See the <a href="http://www.ruby-lang.org/en/downloads/">ruby-lang.org</a> instructions</li>
+</ul>
+
+
+<p>For those who can&#8217;t upgrade yet, you can still have some of the fun with my <a href="https://github.com/marcandre/backports"><code>backports gem</code></a>. It makes  <code>lazy</code>, <code>bsearch</code> and a couple more available for any version of Ruby. The complete list is in the <a href="https://github.com/marcandre/backports#ruby-200"><code>readme</code></a>.</p>
+
+<p>Enjoy Ruby 2.0.0!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-23T07:40:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2011/04/25/dry-migrations/" title="Previous Post: DRY migrations">&laquo; DRY migrations</a>
+      
+      
+        <a class="basic-alignment right" href="/2013/03/23/method-lookup-in-ruby-20/" title="Next Post: Method lookup in Ruby 2.0.0">Method lookup in Ruby 2.0.0 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>I ♥ Ruby!</h1>
+<div class="bio">
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+<ul class="projects">
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
+<li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
+<li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
+
+<div style="margin-top: 5px">
+<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://blog.marc-andre.ca"></a>
+<noscript><a href="http://flattr.com/thing/1177153/Hash" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+</div>
+
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by example</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/25/dry-migrations/">DRY migrations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("malafortune", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/malafortune" class="twitter-follow-button" data-show-count="false">Follow @malafortune</a>
+  
+</section>
+
+
+<section>
+  <h1>on the Internets</h1>
+  <ul>
+    <li><script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%22%3e%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%3c%2f%61%3e%27%29%3b'))</script></li>
+    <li><a href="https://github.com/marcandre">Github</a></li>
+    <li><a href="http://stackoverflow.com/users/8279/marc-andre-lafortune">StackOverflow</a></li>
+    <li>#freenode: marcandre</li>
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113114279421763230783?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Marc-André Lafortune -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'marc-andre';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/';
+        var disqus_url = 'http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

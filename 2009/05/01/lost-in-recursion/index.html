@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Lost In Recursion - # Hash</title>
+  <meta name="author" content="Marc-André Lafortune">
+
+  
+  <meta name="description" content="Last time I asked a simple (but quite hard) Ruby quiz: 1
+2
+3
+4
+# Without writing any method/block/lambda,
+# can you find ways to obtain, in Ruby 1.8. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.marc-andre.ca/2009/05/01/lost-in-recursion/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="# Hash" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">$.noConflict();</script>
+<script src="/javascripts/custom.js"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38685279-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"><img alt="# hash" height="166px; " id="Header1_headerimg" src="http://2.bp.blogspot.com/_IXKt6zPbC7g/SdujkTMXpzI/AAAAAAAAABU/2AsMA3fytvQ/S1600-R/header.jpg" style="display: block" width="985px; "></a></h1>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.marc-andre.ca" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Lost in Recursion</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-01T00:00:00-04:00" pubdate data-updated="true">May 1<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Last time I asked a simple (but quite hard) Ruby quiz:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Without writing any method/block/lambda,</span>
+</span><span class='line'><span class="c1"># can you find ways to obtain, in Ruby 1.8.7 or 1.9:</span>
+</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="n">y</span>   <span class="c1"># ==&gt; true</span>
+</span><span class='line'><span class="n">y</span> <span class="o">==</span> <span class="n">x</span>   <span class="c1"># ==&gt; false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>Before giving the answer, let me give you a bit of background&#8230;</p>
+
+<p>In a blog post, <a href="http://ujihisa.blogspot.com/">Ujihisa</a> was discussing how to compare arrays in Ruby and I was curious about the implementation which deals with recursion.</p>
+
+<p>So what&#8217;s recursion you may ask? Just check:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
+</span><span class='line'><span class="c1"># =&gt; [[...]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>x</code> is an array containing a single element: <code>x</code> itself. At this point, the choice is yours. You can ask &#8220;why should I care?&#8221;. I have no good answer and you might as well stop reading now. Or you can say &#8220;cool&#8221; and read on.</p>
+
+<p>So recursion happens whenever part of an object refers to the object itself. If you&#8217;re not careful about it,you can get infinite loops, for instance. For example, if you attempt to compare arrays naively by comparing their elements, you&#8217;ll get into trouble:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>  <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
+</span><span class='line'><span class="c1"># =&gt; [[...]]</span>
+</span><span class='line'><span class="n">xx</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span> <span class="n">xx</span> <span class="o">&lt;&lt;</span> <span class="n">xx</span>
+</span><span class='line'><span class="c1"># =&gt; [[...]]</span>
+</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="n">xx</span>
+</span><span class='line'><span class="c1"># =&gt; ???</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Can you guess the answer?</p>
+
+<p>Older ruby 1.8.6 raise a StackOverflowError because it uses the naive algorithm of comparing the elements (<code>x</code> and <code>xx</code>) over and over.</p>
+
+<p>Current ruby 1.8.7 and 1.9 detect the recursion and say &#8220;woah, I don&#8217;t want to deal with that, let&#8217;s just say they&#8217;re different&#8221;, so it returns <code>false</code>.</p>
+
+<p>How is that implemented exactly? Well, any call that can be recursive (like <code>x.==(xx)</code> in this case) goes through <code>rb_exec_recursive</code> which keeps track of the receiver (<code>x</code>) on which the method (<code>:==</code>) is called. Recursion is detected when an attempt to call the same method is made on the same object. The method <code>:==</code> returns <code>false</code> for recursive cases.</p>
+
+<p>Note that <code>x == x</code> will return still <code>true</code>, because before the call to rb_exec_recursive, <code>:==</code> will check if the two objects being compared are the same.</p>
+
+<p>What struck me immediately was the lack of symmetry. It didn&#8217;t smell good and it didn&#8217;t take long to find a problem.</p>
+
+<p>Comparing <code>x</code> and <code>y = [x]</code> works fine, actually. <code>x</code> and <code>y</code> are not the same object, so <code>:==</code> calls <code>rb_exec_recursive</code>, which stores <code>x</code> in its &#8216;deja-vu&#8217; list. The elements of <code>x</code> and <code>y</code> are examined, and since their are both the same object, <code>true</code> is returned. <code>y == x</code> also returns <code>true</code>. So far so good.</p>
+
+<p>Now <code>x</code> and <code>z = [y]</code> are another matter. Again, <code>x</code> and <code>y</code> are not the same object, so rb_exec_recursive gets called. It pushes <code>x</code> on the &#8216;deja-vu&#8217; list, and compares its elements (x and y). Comparison of <code>x</code> and <code>y</code> triggers is considered as recursion, because <code>x</code> is already on the list. So <code>x == z</code> returns <code>false</code>.</p>
+
+<p>But what about <code>z == x</code>? <code>z</code> and <code>x</code> are not the same object, so <code>z</code> is put on the recursion-list and elements are compared. <code>y</code> and <code>x</code> are not the same, so a second call to rb_exec_recursive is made, but <code>y</code> is not on the list (only <code>z</code> is at this point) so their elements are compared. <code>x</code> and <code>x</code> are the same object and thus the comparison returns <code>true</code>. In summary:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>  <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
+</span><span class='line'><span class="c1"># =&gt; [[...]]</span>
+</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="o">[[</span><span class="n">x</span><span class="o">]]</span>
+</span><span class='line'><span class="c1"># =&gt; false</span>
+</span><span class='line'><span class="o">[[</span><span class="n">x</span><span class="o">]]</span> <span class="o">==</span> <span class="n">x</span>
+</span><span class='line'><span class="c1"># =&gt; true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Fixing this inconsistency is not that difficult. Can you imagine how? Instead of pushing only <code>x</code> when calling <code>x.==(y)</code>, we need to push the pair <code>[x, y]</code>. Recursion will be triggered only if <code>x.==(y)</code> gets called again, but not for <code>x.==(z)</code>. I set out to make a patch in the C code. With the more strict criteria, we get that both <code>x == z</code> and <code>z == x</code> return <code>true</code>.</p>
+
+<p>On the other hand, we still get <code>false</code> for identical recursive arrays that are built independently, like <code>x</code> and <code>xx</code>.</p>
+
+<p>I then realized that if we detect a recursion when comparing <code>x</code> and <code>xx</code>, it simply means that there is no use in looking further down for differences, so we should return <code>true</code>, not <code>false</code>. Unless a difference is detected somewhere else, then <code>xx</code> and <code>xx</code> are equal! This made it possible to compare recursive arrays that have the same contents, even though they were constructed differently:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>  <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
+</span><span class='line'><span class="c1"># =&gt; [[...]]</span>
+</span><span class='line'><span class="n">step</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span> <span class="n">stone</span> <span class="o">=</span> <span class="o">[</span><span class="n">step</span><span class="o">]</span><span class="p">;</span> <span class="n">step</span> <span class="o">&lt;&lt;</span> <span class="n">stone</span>
+</span><span class='line'><span class="c1"># =&gt; [[[...]]]</span>
+</span><span class='line'><span class="n">x</span> <span class="o">==</span> <span class="n">step</span>
+</span><span class='line'><span class="c1"># =&gt; true</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">tree</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span> <span class="n">tree</span> <span class="o">&lt;&lt;</span> <span class="n">tree</span> <span class="o">&lt;&lt;</span> <span class="n">tree</span>
+</span><span class='line'><span class="c1"># =&gt; [[...], [...]]</span>
+</span><span class='line'><span class="n">mixed</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span> <span class="n">mixed</span> <span class="o">&lt;&lt;</span> <span class="n">tree</span> <span class="o">&lt;&lt;</span> <span class="n">mixed</span>
+</span><span class='line'><span class="c1"># =&gt; [[[...], [...]], [...]]</span>
+</span><span class='line'><span class="n">tree</span> <span class="o">==</span> <span class="n">mixed</span>
+</span><span class='line'><span class="c1"># =&gt; true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If there is a difference between the arrays (say <code>x[0][1][0] != y[0][1][0]</code>), then <code>xx == y</code> returns <code>false</code>. If no such &#8216;path&#8217; exists, then <code>xx == y</code>.</p>
+
+<p>I was quite happy when my patch was accepted a week ago, so the current head of Ruby 1.9 deals with recursion perfectly and it&#8217;s no longer possible that <code>x == y</code> while <code>y != x</code>&#8230;</p>
+
+<p>Details <a href="http://redmine.ruby-lang.org/issues/show/1448">on redmine</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Marc-André Lafortune</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-01T00:00:00-04:00" pubdate data-updated="true">May 1<span>st</span>, 2009</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.marc-andre.ca/2009/05/01/lost-in-recursion/" data-via="malafortune" data-counturl="http://blog.marc-andre.ca/2009/05/01/lost-in-recursion/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/04/03/zombies-hashes-archaisms-of-ruby-core/" title="Previous Post: Zombies Hashes Archaisms Of Ruby Core">&laquo; Zombies Hashes Archaisms Of Ruby Core</a>
+      
+      
+        <a class="basic-alignment right" href="/2009/05/02/schizo-ruby-puzzle/" title="Next Post: A schizo Ruby puzzle">A schizo Ruby puzzle &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>I ♥ Ruby!</h1>
+<div class="bio">
+I'm a committer on Ruby (MRI) and contributer to many other projects, including some of my own:
+<ul class="projects">
+<li><a href="https://github.com/marcandre/backports">backports</a>: today's Ruby in yesterday's implementations.</li>
+<li><a href="https://github.com/marcandre/scheherazade">scheherazade</a>: clever and sexy fixture factory.</li>
+<li><a href="https://github.com/marcandre/fruity">fruity</a>: easy micro-benchmarking.</li>
+
+<div style="margin-top: 5px">
+<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://blog.marc-andre.ca"></a>
+<noscript><a href="http://flattr.com/thing/1177153/Hash" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+</div>
+
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/02/23/ruby-2-by-example/">Ruby 2.0.0 by example</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/25/dry-migrations/">DRY migrations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("malafortune", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/malafortune" class="twitter-follow-button" data-show-count="false">Follow @malafortune</a>
+  
+</section>
+
+
+<section>
+  <h1>on the Internets</h1>
+  <ul>
+    <li><script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%22%3e%62%6c%6f%67%40%6d%61%72%63%2d%61%6e%64%72%65%2e%63%61%3c%2f%61%3e%27%29%3b'))</script></li>
+    <li><a href="https://github.com/marcandre">Github</a></li>
+    <li><a href="http://stackoverflow.com/users/8279/marc-andre-lafortune">StackOverflow</a></li>
+    <li>#freenode: marcandre</li>
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113114279421763230783?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Marc-André Lafortune -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'marc-andre';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
