@@ -4,7 +4,7 @@
   <title><![CDATA[# Hash]]></title>
   <link href="http://blog.marc-andre.ca/atom.xml" rel="self"/>
   <link href="http://blog.marc-andre.ca/"/>
-  <updated>2013-04-30T16:26:25-04:00</updated>
+  <updated>2014-02-05T16:19:17-05:00</updated>
   <id>http://blog.marc-andre.ca/</id>
   <author>
     <name><![CDATA[Marc-André Lafortune]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why I won't squash my commits]]></title>
+    <link href="http://blog.marc-andre.ca/2014/02/05/why-i-wont-squash-my-commits/"/>
+    <updated>2014-02-05T00:27:00-05:00</updated>
+    <id>http://blog.marc-andre.ca/2014/02/05/why-i-wont-squash-my-commits</id>
+    <content type="html"><![CDATA[<h2>tl;dnr</h2>
+
+<p>While I really appreciate the constructive comments I get on pull requests I make, there’s one type of comment I have a hard time with.</p>
+
+<p>Please don&#8217;t <a href="https://github.com/rails/rails/pull/8267#issuecomment-11551706">ask me</a>
+ to <a href="https://github.com/rails/rails/pull/13938#issuecomment-34061339">squash</a>
+ the commits of my pull requests.</p>
+
+<p>I won’t.</p>
+
+<p>If my pull request has 5 commits, it is because I each of them is independent and I believe they should remain so.</p>
+
+<p>Project committers have a couple of choices:</p>
+
+<ul>
+<li>merge the PR as is</li>
+<li>manually squash the commits</li>
+<li>wait for someone else to make a PR with the commits squashed</li>
+<li>reject the PR</li>
+</ul>
+
+
+<p>Call it lunacy or pride, but I just won’t squash my commits. Hopefully committers won’t take offense at that as I’ll do my best to not take offense at their suggestion that I didn’t segment my commits correctly.</p>
+
+<h2>Why committers ask to squash commits?</h2>
+
+<p>I imagine the historical reason it that many contributors aren&#8217;t super comfortable with <code>git</code> and <code>git rebase -i</code> in particular, so their commits represent their train of thought, not a sequence of independent changes to apply. E.g.:</p>
+
+<ul>
+<li>Introduce <great feature></li>
+<li>Oops, fix typo</li>
+<li>Oh oh, fix a bug of <great feature></li>
+<li>Fix bug of <great feature> (for real this time)</li>
+</ul>
+
+
+<p>For these contributors, it is mandatory that the commits are not accepted as is. Squashing the whole thing is usually the safest bet.</p>
+
+<p>There are many contributors that use <code>git rebase -i</code> and <code>git commit -p</code> in their sleep though, so that won’t be the situation.</p>
+
+<p>The other reason I’ve been told is that &#8220;we generally squash all commits so that it&#8217;s easy to backport/revert”. I can&#8217;t agree with that. First, it is much more difficult to backport/revert just part of the PR if it is squashed. Morever, it’s pretty easy to backport/revert the whole PR by using <code>git revert</code> and <code>git cherry-pick</code> either with a range of commits or the merge commit. Less than 2% of commits get reverted anyways.</p>
+
+<h2>When should committers not ask to squash commits?</h2>
+
+<p>If all commits can stand on their own, i.e. all tests pass after each individual commit, then the commits are atomic and do not need to be squashed. I’d even say they probably shouldn’t be squashed.</p>
+
+<p>My commits are typically the smallest unit of change that will work and still pass all tests.
+The main exception is a commit of a bunch of trivial changes that are isolated (e.g. removing trailing whitespace, fixing a bunch of typos in the doc,renaming of a local variable). Even then, I won’t commit doc typos and renaming of a variable together, say.</p>
+
+<p>When doing a refactor, I will usually split the changes in small independent refactoring commits. I believe it makes it easier to understand and judge than one big commit.</p>
+
+<p>A rather telling example was <a href="https://github.com/sdsykes/fastimage/pull/27">this PR I made recently</a>. It aims at fixing one bug, but I broke it down into 15 commits. Each consists of a single refactoring step in the right direction, until the last commit which is the one fixing the bug per say. It&#8217;s easier to see the validity of each change this way, while the combined diff has a lot of noise and does a bunch of different things at once. I just can’t grok the combined diff.</p>
+
+<p>I&#8217;m not asking everyone to structure their commits with such detail and attention; I&#8217;m only asking that it be, if not appreciated, at least accepted to do so.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Method lookup in Ruby 2.0.0]]></title>
@@ -1992,191 +2054,6 @@ Undoubtably, the most important difference is that on the mac&#8230; it works.
 <p>Can&#8217;t stand <code>elsif</code> (wow! one less character! impressive gain&#8230;), <code>Enumerable.uniq</code>, &#8230;</p>
 
 <p>I&#8217;m counting on you to start a Facebook group &#8220;don&#8217;t abbreviate in ruby&#8221;!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Major Webcam Headache]]></title>
-    <link href="http://blog.marc-andre.ca/2008/09/01/major-webcam-headache/"/>
-    <updated>2008-09-01T00:00:00-04:00</updated>
-    <id>http://blog.marc-andre.ca/2008/09/01/major-webcam-headache</id>
-    <content type="html"><![CDATA[<p>I&#8217;m lost at sea. I&#8217;ve spent hours reading, installing, testing and I still can&#8217;t see how I&#8217;ll achieve my goal. It&#8217;s quite simple, really. I want to build a website that will allow me to:</p>
-
-<ul>
-<li><p>record video using a webcam (flash)</p></li>
-<li><p>concatenate such videos (ideally with videos of other formats)</p></li>
-<li><p>be completely automated, using any combination of linux servers (on ec2) and commercial hosts if needed.</p></li>
-</ul>
-
-
-<!-- more -->
-
-
-<p>After a bit of research, I thought this would be pretty easy.</p>
-
-<ul>
-<li><p>red5 is a cross platform solution to enable video recording. Alternative solutions would be Wowza or a hosted solution like influxis.com/uvault/&#8230;</p></li>
-<li><p>ffmpeg is a cross platform tool that can deal with flv and other formats; there&#8217;s also mencoder that could help.</p></li>
-</ul>
-
-
-<p>I didn&#8217;t find installation easy, but managed to have everything running both on my Mac and on Ubuntu. Where things fail miserably though:</p>
-
-<ol><li>I can&#8217;t get a flv recorded with a fixed frame rate</li><li>I have problems concatenating flvs</li></ol>
-
-
-<p><span style="font-size:180%;">Problem 1</span></p>
-
-<p>I <span style="font-weight: bold;">do</span> manage to record flvs. The beginning is always &#8220;jumpy&#8221; for some reason. If I play them back in Wimpy FLV Player, it plays alright, but the progress indicator doesn&#8217;t move smoothly or in a regular fashion.</p>
-
-<p>If it plays OK, why should I worry about the progress indicator? The problem is that I can&#8217;t seem to transcode it to anything else using ffmpeg.</p>
-
-<p>A naive &#8220;ffmpeg -i input.flv output.avi&#8221; will not work because the frame rate is wrong (1000.0). If I specify 15 fps explicitely by using &#8220;ffmeg -i input.flv -r 15 output.avi&#8221;, the visual is not synchronized properly with the audio because of the beginning part.</p>
-
-<p>I tried multiple other techniques of recording and always some kind of problem at the beginning of the flv:</p>
-
-<ul><li>a) Using red5 (v 0.6.3 and 0.7.0, both on OS X 10.5.4 and Ubuntu 8.04) and the publisher.html example it includes. Here&#8217;s the <a href="http://www.marc-andre.ca/posts/blog/webcam/test-red5-publisher.flv">resulting flv</a>.</li><li>b) Still using red5, but publishing &#8220;live&#8221; and starting the recording after a couple of seconds. I used <a href="http://sziebert.net/posts/server-side-stream-recording-with-red5/">these example files</a>. Here&#8217;s the <a href="http://www.marc-andre.ca/posts/blog/webcam/test-red5-live-sziebert.flv">resulting flv</a>. The indicator still jumps to the end very rapidly, no sound at all with this method&#8230;</li><li>c) Using Wowza Media Server Pro (v 1.5.3, on my mac). The progress indicator doesn&#8217;t jump to the end, but it moves more quickly at the very beginning, so the visual is not synchronized properly with the audio because of the beginning part. Just to be sure I tried the <a href="http://www.marc-andre.ca/posts/blog/webcam/test-wowza.flv">video recorder that comes with it</a>, as well as <a href="http://www.marc-andre.ca/posts/blog/webcam/test-wowza-publisher.flv">red5&#8217;s publisher</a> (with identical results).</li><li>d) Using Flash Media Server 3 via <a href="http://www.influxis.com/">www.influxis.com</a>. I get yet another progression pattern. The progress indicator jumps a bit a the beginning and then becomes regular. Here&#8217;s <a href="http://www.marc-andre.ca/posts/blog/webcam/test-influxis.flv">an example</a>.</li></ul>
-
-
-<p>I know it <span style="font-style: italic;">is</span> possible to record a &#8220;flawless&#8221; flv because facebook&#8217;s video application do it (using red5?) Indeed, it&#8217;s easy to look at the HTML source of facebook video and get the http URL to download the Flvs they produce. When played back in Wimpy, the progress indicator is smooth, and transcoding &#8220;ffmeg -i facebook.flv facebook.avi&#8221; produces a good avi. Here&#8217;s <a href="http://www.marc-andre.ca/posts/blog/webcam/test-facebook.flv">an example</a>.</p>
-
-<p><span style="font-size:180%;">Problem 2</span></p>
-
-<p>OK, that should be easy enough, right? There&#8217;s even a full code example in the <a href="http://ffmpeg.mplayerhq.hu/faq.html#SEC31">ffmpeg FAQ</a>.</p>
-
-<p>Well, pipes seem to be giving me problems, so let&#8217;s keep it simple and use normal files. Also, if I don&#8217;t specify a rate of 15 fps, the visual part becomes <a href="http://www.marc-andre.ca/posts/blog/webcam/output-norate.flv">extremely fast</a>. Let&#8217;s make it easier and simply try to concatenate the same &#8216;input.flv&#8217; to itself instead of dealing with two different inputs. The example script thus becomes:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ffmpeg -i input.flv -vn -f u16le -acodec pcm_s16le -ac 2 -ar 44100 \
-</span><span class='line'>
-</span><span class='line'>     - &gt; temp.a &lt; /dev/null ffmpeg -i input.flv -an -f yuv4mpegpipe - &gt; temp.v &lt; /dev/null cat temp.v temp.v &gt; all.v
-</span><span class='line'>
-</span><span class='line'>cat temp.a temp.a &gt; all.a
-</span><span class='line'>
-</span><span class='line'>ffmpeg -f u16le -acodec pcm_s16le -ac 2 -ar 44100 -i all.a \
-</span><span class='line'>
-</span><span class='line'>    -f yuv4mpegpipe -i all.v \
-</span><span class='line'>
-</span><span class='line'>    -sameq -y output.flv&lt;/blockquote&gt;Well, using this will work for the audio, but I only get the video the first time around. This seems to be the case for any flv I throw as input.flv, including the clean facebook one.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>a) Why doesn&#8217;t the example script work as advertised, in particular why do I not get all the video I&#8217;m expecting?</p>
-
-<p>b) Why do I have to specify a framerate while Wimpy player can play the flv at the right speed?</p>
-
-<p>The only way I found to concatenate two flvs was to use mencoder. Problem is, mencoder doesn&#8217;t seem to concat flvs:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>mencoder input.flv input.flv -o output.flv -of lavf -oac copy \
-</span><span class='line'>
-</span><span class='line'>   -ovc lavc -lavcopts vcodec=flv</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I get a Floating point exception&#8230;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>MEncoder 1.0rc2-4.0.1 (C) 2000-2007 MPlayer Team
-</span><span class='line'>CPU: Intel(R) Xeon(R) CPU            5150  @ 2.66GHz (Family: 6, Model: 15, Stepping: 6)
-</span><span class='line'>CPUflags: Type: 6 MMX: 1 MMX2: 1 3DNow: 0 3DNow2: 0 SSE: 1 SSE2: 1
-</span><span class='line'>Compiled for x86 CPU with extensions: MMX MMX2 SSE SSE2
-</span><span class='line'>success: format: 0  data: 0x0 - 0x45b2f
-</span><span class='line'>libavformat file format detected.
-</span><span class='line'>[flv @ 0x697160]Unsupported audio codec (6)
-</span><span class='line'>[flv @ 0x697160]Could not find codec parameters (Audio: 0x0006, 22050 Hz, mono)
-</span><span class='line'>[lavf] Video stream found, -vid 0
-</span><span class='line'>[lavf] Audio stream found, -aid 1
-</span><span class='line'>VIDEO:  [FLV1]  240x180  0bpp  1000.000 fps    0.0 kbps ( 0.0 kbyte/s)
-</span><span class='line'>[V] filefmt:44  fourcc:0x31564C46  size:240x180  fps:1000.00  ftime:=0.0010
-</span><span class='line'>** MUXER_LAVF *****************************************************************
-</span><span class='line'>REMEMBER: MEncoder's libavformat muxing is presently broken and can generate
-</span><span class='line'>INCORRECT files in the presence of B frames. Moreover, due to bugs MPlayer
-</span><span class='line'>will play these INCORRECT files as if nothing were wrong!
-</span><span class='line'>*******************************************************************************
-</span><span class='line'>OK, exit
-</span><span class='line'>Opening video filter: [expand osd=1]
-</span><span class='line'>Expand: -1 x -1, -1 ; -1, osd: 1, aspect: 0.000000, round: 1
-</span><span class='line'>==========================================================================
-</span><span class='line'>Opening video decoder: [ffmpeg] FFmpeg's libavcodec codec family
-</span><span class='line'>Selected video codec: [ffflv] vfm: ffmpeg (FFmpeg Flash video)
-</span><span class='line'>==========================================================================
-</span><span class='line'>audiocodec: framecopy (format=6 chans=1 rate=22050 bits=16 B/s=0 sample-0)
-</span><span class='line'>VDec: vo config request - 240 x 180 (preferred colorspace: Planar YV12)
-</span><span class='line'>VDec: using Planar YV12 as output csp (no 0)
-</span><span class='line'>Movie-Aspect is undefined - no prescaling applied.
-</span><span class='line'>videocodec: libavcodec (240x180 fourcc=31564c46 [FLV1])
-</span><span class='line'>VIDEO CODEC ID: 22
-</span><span class='line'>AUDIO CODEC ID: 10007, TAG: 0
-</span><span class='line'>Writing header...
-</span><span class='line'>[NULL @ 0x67d110]codec not compatible with flv
-</span><span class='line'>Floating point exception</span></code></pre></td></tr></table></div></figure>
-
-
-<p>c) Is there a way for mencoder to decode and encode flvs correctly?</p>
-
-<p>So the only way I&#8217;ve found so far to concat flvs, is to use ffmpeg to go back and forth between flv and avi, and use mencoder to concat the avis:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ffmpeg -i input.flv -vcodec rawvideo -acodec pcm_s16le -r 15 file.avi
-</span><span class='line'>mencoder -o output.avi -oac copy -ovc copy -noskip file.avi file.avi
-</span><span class='line'>ffmpeg -i output.avi output.flv</span></code></pre></td></tr></table></div></figure>
-
-
-<p>d) There must be a better way to achieve this&#8230; Which one?</p>
-
-<p>Because of the problem of the framerate, though, only &#8220;clean&#8221; flvs (like facebook&#8217;s) will be converted correctly to avis.</p>
-
-<p>Any help would be very appreciated.</p>
-
-<p><span style="font-weight:bold;">Update</span></p>
-
-<p>I came to the conclusion that there is no existing solution, so I rolled my own. I&#8217;ll release flvedit soon, but if you need to join FLVs before &#8216;soon&#8217;, you can let me know!</p>
 ]]></content>
   </entry>
   

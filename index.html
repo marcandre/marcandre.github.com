@@ -9,7 +9,7 @@
   <meta name="author" content="Marc-André Lafortune">
 
   
-  <meta name="description" content="Tech.pro sponsored a tutorial on method lookup in Ruby 2.0.0. It&#8217;s an in-depth review of how exactly Ruby deals with method calls. Read on → ">
+  <meta name="description" content="tl;dnr While I really appreciate the constructive comments I get on pull requests I make, there’s one type of comment I have a hard time with. Please &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,95 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/02/05/why-i-wont-squash-my-commits/">Why I Won&#8217;t Squash My Commits</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-05T00:27:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>tl;dnr</h2>
+
+<p>While I really appreciate the constructive comments I get on pull requests I make, there’s one type of comment I have a hard time with.</p>
+
+<p>Please don&#8217;t <a href="https://github.com/rails/rails/pull/8267#issuecomment-11551706">ask me</a>
+ to <a href="https://github.com/rails/rails/pull/13938#issuecomment-34061339">squash</a>
+ the commits of my pull requests.</p>
+
+<p>I won’t.</p>
+
+<p>If my pull request has 5 commits, it is because I each of them is independent and I believe they should remain so.</p>
+
+<p>Project committers have a couple of choices:</p>
+
+<ul>
+<li>merge the PR as is</li>
+<li>manually squash the commits</li>
+<li>wait for someone else to make a PR with the commits squashed</li>
+<li>reject the PR</li>
+</ul>
+
+
+<p>Call it lunacy or pride, but I just won’t squash my commits. Hopefully committers won’t take offense at that as I’ll do my best to not take offense at their suggestion that I didn’t segment my commits correctly.</p>
+
+<h2>Why committers ask to squash commits?</h2>
+
+<p>I imagine the historical reason it that many contributors aren&#8217;t super comfortable with <code>git</code> and <code>git rebase -i</code> in particular, so their commits represent their train of thought, not a sequence of independent changes to apply. E.g.:</p>
+
+<ul>
+<li>Introduce <great feature></li>
+<li>Oops, fix typo</li>
+<li>Oh oh, fix a bug of <great feature></li>
+<li>Fix bug of <great feature> (for real this time)</li>
+</ul>
+
+
+<p>For these contributors, it is mandatory that the commits are not accepted as is. Squashing the whole thing is usually the safest bet.</p>
+
+<p>There are many contributors that use <code>git rebase -i</code> and <code>git commit -p</code> in their sleep though, so that won’t be the situation.</p>
+
+<p>The other reason I’ve been told is that &#8220;we generally squash all commits so that it&#8217;s easy to backport/revert”. I can&#8217;t agree with that. First, it is much more difficult to backport/revert just part of the PR if it is squashed. Morever, it’s pretty easy to backport/revert the whole PR by using <code>git revert</code> and <code>git cherry-pick</code> either with a range of commits or the merge commit. Less than 2% of commits get reverted anyways.</p>
+
+<h2>When should committers not ask to squash commits?</h2>
+
+<p>If all commits can stand on their own, i.e. all tests pass after each individual commit, then the commits are atomic and do not need to be squashed. I’d even say they probably shouldn’t be squashed.</p>
+
+<p>My commits are typically the smallest unit of change that will work and still pass all tests.
+The main exception is a commit of a bunch of trivial changes that are isolated (e.g. removing trailing whitespace, fixing a bunch of typos in the doc,renaming of a local variable). Even then, I won’t commit doc typos and renaming of a variable together, say.</p>
+
+<p>When doing a refactor, I will usually split the changes in small independent refactoring commits. I believe it makes it easier to understand and judge than one big commit.</p>
+
+<p>A rather telling example was <a href="https://github.com/sdsykes/fastimage/pull/27">this PR I made recently</a>. It aims at fixing one bug, but I broke it down into 15 commits. Each consists of a single refactoring step in the right direction, until the last commit which is the one fixing the bug per say. It&#8217;s easier to see the validity of each change this way, while the combined diff has a lot of noise and does a bunch of different things at once. I just can’t grok the combined diff.</p>
+
+<p>I&#8217;m not asking everyone to structure their commits with such detail and attention; I&#8217;m only asking that it be, if not appreciated, at least accepted to do so.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -512,47 +601,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/04/03/zombies-hashes-archaisms-of-ruby-core/">Zombies Hashes Archaisms of Ruby Core</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-03T00:00:00-04:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I just <b>love</b> hashes. So much so, I named my blog after them. I also like that the hash sign is used for comments, in Ruby, or the way <i>hash</i> resembles <i>hatch</i>, thus the messy graphic theme and all. But I really like hashes. They are like mini-objects (object hatchlings?) and I tend to use them to store all sorts of information or instead of many conditions with <code>case x; when :a ...; when :b ...</code>.</p>
-
-<p>So I was quite surprised to note that in Ruby, either it&#8217;s really easy and natural to create a hash (with the super nice <code>{:key =&gt; value, ...}</code> syntax) or</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2009/04/03/zombies-hashes-archaisms-of-ruby-core/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -584,6 +632,10 @@ I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, incl
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/02/05/why-i-wont-squash-my-commits/">Why I won&#8217;t squash my commits</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/03/23/method-lookup-in-ruby-20/">Method lookup in Ruby 2.0.0</a>
       </li>
     
@@ -597,10 +649,6 @@ I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, incl
     
       <li class="post">
         <a href="/2010/11/15/methodmissing-politely/">method_missing, politely</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2010/04/01/fixing-mri-dozen-steps-at-time/">Fixing MRI, a dozen steps at a time</a>
       </li>
     
   </ul>
@@ -651,7 +699,7 @@ I&#8217;m a committer on Ruby (MRI) and contributer to many other projects, incl
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Marc-André Lafortune -
+  Copyright &copy; 2014 - Marc-André Lafortune -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
